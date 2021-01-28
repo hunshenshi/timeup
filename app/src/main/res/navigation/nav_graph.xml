@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/FragmentMonitor">
+
+    <fragment
+        android:id="@+id/FragmentMonitor"
+        android:name="com.szw.timeup.FragmentMonitor"
+        android:label="@string/fragment_monitor_label"
+        tools:layout="@layout/fragment_monitor">
+
+        <action
+            android:id="@+id/action_FragmentMonitor_to_FragmentTiming"
+            app:destination="@id/FragmentTiming" />
+    </fragment>
+    <fragment
+        android:id="@+id/FragmentTiming"
+        android:name="com.szw.timeup.FragmentTiming"
+        android:label="@string/fragment_timing_label"
+        tools:layout="@layout/fragment_timing">
+
+        <action
+            android:id="@+id/action_FragmentTiming_to_FragmentMonitor"
+            app:destination="@id/FragmentMonitor" />
+    </fragment>
+</navigation>
