@@ -4,6 +4,8 @@
 
     <!-- 对任务进行排序 -->
     <uses-permission android:name="android.permission.REORDER_TASKS" />
+    <!-- 申请浮窗权限 -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <!-- 允许申请把应用加入电池白名单 -->
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <!-- 申请权限获取用户进程 -->

@@ -6,11 +6,15 @@ import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.szw.timeup.helper.SystemHelper;
 
@@ -47,6 +51,11 @@ public class MainActivity extends AppCompatActivity {
             systemHelper.requestPermissionForUsageStats(MainActivity.this);
         }
 
+        if (!Settings.canDrawOverlays(this)) {
+            //若未授权则请求权限
+            systemHelper.requestOverlayPermission(MainActivity.this);
+        }
+
         connectionService = new ConnectionService();
         bindService(new Intent(this, CheckService.class), connectionService, BIND_AUTO_CREATE);
     }
@@ -68,14 +77,29 @@ public class MainActivity extends AppCompatActivity {
                 .add(fragmentTiming, FragmentTiming.class.getName()).show(fragmentTiming).commitAllowingStateLoss();
     }
 
-    public void changeMainFragment() {
-        FragmentMonitor fragmentMonitor = new FragmentMonitor();
-        getSupportFragmentManager().beginTransaction()
-//                        .hide(getActivity().getSupportFragmentManager().findFragmentByTag(FragmentTiming.class.getName()))
-                .hide(getSupportFragmentManager().findFragmentById(R.id.nav_main2_fragment))
-                .add(fragmentMonitor, FragmentMonitor.class.getName())
-                .show(fragmentMonitor).commitAllowingStateLoss(); // 空白页面
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();//要去掉这句，否则会结束当前Activity，无法起到屏蔽的作用
+        //处理自己的逻辑
+        Log.i("MainActivity", " onBackPressed");
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            Log.i("MainActivity", " onKeyDown");
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+//    @Override
+//    public boolean onKeyUp(int keyCode, KeyEvent event) {
+//        if(keyCode == KeyEvent.KEYCODE_BACK){
+//            return true;
+//        }
+//        return super.onKeyUp(keyCode, event);
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

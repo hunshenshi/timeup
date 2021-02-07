@@ -51,6 +51,7 @@ public class SystemHelper {
         }
     }
 
+    // 申请UsageStatsManager权限
     public void requestPermissionForUsageStats(Context context) {
         try {
             Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
@@ -59,5 +60,11 @@ public class SystemHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void requestOverlayPermission(Context context) {
+        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+//        intent.setData(Uri.parse("package:" + getPackageName()));
+        context.startActivity(intent);
     }
 }

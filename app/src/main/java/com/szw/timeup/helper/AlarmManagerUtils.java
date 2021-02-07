@@ -6,14 +6,18 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.SystemClock;
 
 import com.szw.timeup.CheckService;
 
+import java.io.IOException;
 import java.util.Calendar;
 
 public class AlarmManagerUtils {
 
-    private static final long TIME_INTERVAL = 15 * 1000;//闹钟执行任务的时间间隔
+    // 闹钟执行任务的时间间隔
+    private static final long TIME_INTERVAL = 15 * 60 * 1000;
+//    private static final long TIME_INTERVAL = 15 * 1000;
     private Context context;
     public static AlarmManager am;
     public static PendingIntent pendingIntent;
@@ -53,7 +57,7 @@ public class AlarmManagerUtils {
         am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, CheckService.class);
 //        PendingIntent.getBroadcast和PendingIntent.getService区别
-        pendingIntent = PendingIntent.getService(context, 0, intent, 0);//每隔10秒启动一次服务
+        pendingIntent = PendingIntent.getService(context, 0, intent, 0);
     }
 
     @SuppressLint("NewApi")
@@ -67,14 +71,21 @@ public class AlarmManagerUtils {
 
         //版本适配 System.currentTimeMillis()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {// 6.0及以上
-            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
-                    calendar.getTimeInMillis(), pendingIntent);
+//            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
+//                    calendar.getTimeInMillis(), pendingIntent);
+            // 是否需要使用WAKEUP？熄屏状态下不需要执行吧？是不是可以省电？
+            am.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                    SystemClock.elapsedRealtime(), pendingIntent);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {// 4.4及以上
-            am.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                    pendingIntent);
+//            am.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+//                    pendingIntent);
+            am.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                    SystemClock.elapsedRealtime(), pendingIntent);
         } else {
-            am.setRepeating(AlarmManager.RTC_WAKEUP,
-                    calendar.getTimeInMillis(), TIME_INTERVAL, pendingIntent);
+//            am.setRepeating(AlarmManager.RTC_WAKEUP,
+//                    calendar.getTimeInMillis(), TIME_INTERVAL, pendingIntent);
+            am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                    SystemClock.elapsedRealtime(), TIME_INTERVAL, pendingIntent);
         }
     }
 
@@ -82,11 +93,21 @@ public class AlarmManagerUtils {
     public void getUpAlarmManagerWorkOnOthers() {
         //高版本重复设置闹钟达到低版本中setRepeating相同效果
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {// 6.0及以上
-            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
-                    System.currentTimeMillis() + TIME_INTERVAL, pendingIntent);
+            try {
+                Util.writeFile(context, "log.txt", "getUpAlarmManagerWorkOnOthers.\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("getUpAlarmManagerWorkOnOthers");
+//            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
+//                    System.currentTimeMillis() + TIME_INTERVAL, pendingIntent);
+            am.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                    SystemClock.elapsedRealtime() + TIME_INTERVAL, pendingIntent);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {// 4.4及以上
-            am.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
-                    + TIME_INTERVAL, pendingIntent);
+//            am.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
+//                    + TIME_INTERVAL, pendingIntent);
+            am.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                    SystemClock.elapsedRealtime() + TIME_INTERVAL, pendingIntent);
         }
     }
 }
