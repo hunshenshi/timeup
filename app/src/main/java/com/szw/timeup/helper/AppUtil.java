@@ -36,7 +36,7 @@ public class AppUtil {
             ActivityManager manager = (ActivityManager) context.getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
             currentClassName = manager.getRunningTasks(1).get(0).topActivity.getPackageName();
         } else {
-            System.out.println("=========================getForegroundUsageStats====================");
+//            System.out.println("=========================getForegroundUsageStats====================");
             UsageStats initStat = getForegroundUsageStats(context, START_TIME, END_TIME);
             if (initStat != null) {
                 currentClassName = initStat.getPackageName();
@@ -71,13 +71,13 @@ public class AppUtil {
                 return null;
             }
 
-            StringBuilder stringBuilder = new StringBuilder();
-            SimpleDateFormat sdf = new SimpleDateFormat();// 格式化时间
-            sdf.applyPattern("yyyy-MM-dd HH:mm:ss a");// a为am/pm的标记
-            Date date = new Date();// 获取当前时间
-            stringBuilder.append(sdf.format(date)).append("\n");
-            stringBuilder.append("############### start list ##########").append("\n");
-            System.out.println("############### start list ##########");
+//            StringBuilder stringBuilder = new StringBuilder();
+//            SimpleDateFormat sdf = new SimpleDateFormat();// 格式化时间
+//            sdf.applyPattern("yyyy-MM-dd HH:mm:ss a");// a为am/pm的标记
+//            Date date = new Date();// 获取当前时间
+//            stringBuilder.append(sdf.format(date)).append("\n");
+//            stringBuilder.append("############### start list ##########").append("\n");
+//            System.out.println("############### start list ##########");
             for (UsageStats usageStats : usageStatses) {
                 // 华为得到前台运行到app com.huawei.android.launcher
 //                System.out.println("szw usageStats " + usageStats.getPackageName() + " " + usageStats.getLastTimeUsed());
@@ -123,32 +123,32 @@ public class AppUtil {
 //                    e.printStackTrace();
 //                }
 
-                System.out.println(usageStats.getPackageName() + " " + usageStats.getLastTimeUsed()
-                        + " " + lastEvent);
-                stringBuilder.append(usageStats.getPackageName() + " " + usageStats.getLastTimeUsed()
-                        + " " + lastEvent).append("\n");
-                if (usageStatsResult != null) {
-                    System.out.println(usageStatsResult.getLastTimeUsed() + " " + usageStats.getLastTimeUsed() + (usageStatsResult.getLastTimeUsed() < usageStats.getLastTimeUsed()));
-                    stringBuilder.append(usageStatsResult.getLastTimeUsed() + " " + usageStats.getLastTimeUsed() + (usageStatsResult.getLastTimeUsed() < usageStats.getLastTimeUsed())).append("\n");
-                }
+//                System.out.println(usageStats.getPackageName() + " " + usageStats.getLastTimeUsed()
+//                        + " " + lastEvent);
+//                stringBuilder.append(usageStats.getPackageName() + " " + usageStats.getLastTimeUsed()
+//                        + " " + lastEvent).append("\n");
+//                if (usageStatsResult != null) {
+//                    System.out.println(usageStatsResult.getLastTimeUsed() + " " + usageStats.getLastTimeUsed() + (usageStatsResult.getLastTimeUsed() < usageStats.getLastTimeUsed()));
+//                    stringBuilder.append(usageStatsResult.getLastTimeUsed() + " " + usageStats.getLastTimeUsed() + (usageStatsResult.getLastTimeUsed() < usageStats.getLastTimeUsed())).append("\n");
+//                }
 
                 // 是否需要把com.huawei.android.launcher去掉
                 if (usageStatsResult == null || usageStatsResult.getLastTimeUsed() < usageStats.getLastTimeUsed()) {
-                    System.out.println(usageStats.getPackageName() + " " + usageStats.getLastTimeUsed()
-                            + " " + lastEvent + "===========");
-                    stringBuilder.append(usageStats.getPackageName() + " " + usageStats.getLastTimeUsed()
-                            + " " + lastEvent + "===========").append("\n");
+//                    System.out.println(usageStats.getPackageName() + " " + usageStats.getLastTimeUsed()
+//                            + " " + lastEvent + "===========");
+//                    stringBuilder.append(usageStats.getPackageName() + " " + usageStats.getLastTimeUsed()
+//                            + " " + lastEvent + "===========").append("\n");
                     usageStatsResult = usageStats;
                 }
             }
 
-            System.out.println("############### start end ##########");
-            stringBuilder.append("############### start end ##########").append("\n");
-            try {
-                Util.writeFile(context, "log.txt",stringBuilder.toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            System.out.println("############### start end ##########");
+//            stringBuilder.append("############### start end ##########").append("\n");
+//            try {
+//                Util.writeFile(context, "log.txt",stringBuilder.toString());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
         }
         return usageStatsResult;
     }

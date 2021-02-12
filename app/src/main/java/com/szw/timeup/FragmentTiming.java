@@ -66,6 +66,7 @@ public class FragmentTiming extends Fragment {
 //                        .hide(getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_main2_fragment))
 //                        .show(getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment))
 //                        .commitAllowingStateLoss(); // 空白页面
+                ((MainActivity)getActivity()).setMustfore(false);
                 Log.i("time ", " finish");
 //                FragmentMonitor fragmentMonitor = new FragmentMonitor();
 //                getActivity().getSupportFragmentManager().beginTransaction()

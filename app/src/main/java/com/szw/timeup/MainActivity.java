@@ -25,6 +25,16 @@ public class MainActivity extends AppCompatActivity {
     private CheckService checkService;
     private ConnectionService connectionService;
     private boolean isTiming = false;
+    // 必须在前台
+    private boolean mustfore = false;
+
+    public boolean isMustfore() {
+        return mustfore;
+    }
+
+    public void setMustfore(boolean mustfore) {
+        this.mustfore = mustfore;
+    }
 
     public boolean isTiming() {
         return isTiming;

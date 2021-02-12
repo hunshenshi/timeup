@@ -1,6 +1,7 @@
 package com.szw.timeup;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
@@ -56,17 +57,17 @@ public class CheckService extends Service {
             @SuppressLint("LongLogTag")
             @Override
             public void run() {
-                SimpleDateFormat sdf = new SimpleDateFormat();// 格式化时间
-                sdf.applyPattern("yyyy-MM-dd HH:mm:ss a");// a为am/pm的标记
-                Date date = new Date();// 获取当前时间
-                System.out.println("现在时间：" + sdf.format(date));
-                Log.d(TAG, sdf.format(date) + " run: ");
+//                SimpleDateFormat sdf = new SimpleDateFormat();// 格式化时间
+//                sdf.applyPattern("yyyy-MM-dd HH:mm:ss a");// a为am/pm的标记
+//                Date date = new Date();// 获取当前时间
+//                System.out.println("现在时间：" + sdf.format(date));
+//                Log.d(TAG, sdf.format(date) + " run: ");
                 String currentPkg = AppUtil.getForegroundActivityName(getApplicationContext());
-                String currentPkg2 = AppUtilV2.getForegroundActivityName(getApplicationContext());
-                String currentPkg3 = AppUtilV3.getForegroundActivityName(getApplicationContext());
-                System.out.println("AppUtil usageStats " + currentPkg);
-                System.out.println("AppUtil2 usageStats " + currentPkg2);
-                System.out.println("AppUtil3 usageStats " + currentPkg3);
+//                String currentPkg2 = AppUtilV2.getForegroundActivityName(getApplicationContext());
+//                String currentPkg3 = AppUtilV3.getForegroundActivityName(getApplicationContext());
+//                System.out.println("AppUtil usageStats " + currentPkg);
+//                System.out.println("AppUtil2 usageStats " + currentPkg2);
+//                System.out.println("AppUtil3 usageStats " + currentPkg3);
                 try {
                     Util.writeFile(getApplicationContext(), "log.txt", "AppUtil usageStats " + currentPkg + "\n");
                 } catch (IOException e) {
@@ -86,6 +87,7 @@ public class CheckService extends Service {
                     if (videoAppRunning) {
                         videoAppRunning = false;
                         activity.setTiming(true);
+                        activity.setMustfore(true);
                         Log.i("CheckService onStartCommand ", "monitor app is foreground.");
                         try {
                             Util.writeFile(getApplicationContext(), "log.txt", "monitor app is foreground.\n");
@@ -116,6 +118,27 @@ public class CheckService extends Service {
 
     public void toRunningForeground(String packageNameTarget) {
         PackageManager packageManager = getPackageManager();
+        Log.i("szw logs::", "android.intent.action.MAIN： APP=" + packageNameTarget);
+
+        Intent intent = packageManager.getLaunchIntentForPackage(packageNameTarget);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        intent.setFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        /**android.intent.action.MAIN：打开另一程序
+         */
+        intent.setAction("android.intent.action.MAIN");
+        /**
+         * FLAG_ACTIVITY_SINGLE_TOP:
+         * 如果当前栈顶的activity就是要启动的activity,则不会再启动一个新的activity
+         */
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//        intent.putExtra("fragment", 2);
+        activity.startActivity(intent);
+
+    }
+
+    public void toRunningForeground(Activity activity, String packageNameTarget) {
+        PackageManager packageManager = activity.getPackageManager();
         Log.i("szw logs::", "android.intent.action.MAIN： APP=" + packageNameTarget);
 
         Intent intent = packageManager.getLaunchIntentForPackage(packageNameTarget);

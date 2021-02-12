@@ -98,7 +98,6 @@ public class AlarmManagerUtils {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            System.out.println("getUpAlarmManagerWorkOnOthers");
 //            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
 //                    System.currentTimeMillis() + TIME_INTERVAL, pendingIntent);
             am.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP,
