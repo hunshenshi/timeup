@@ -17,7 +17,9 @@ public class AlarmManagerUtils {
 
     // 闹钟执行任务的时间间隔
     private static final long TIME_INTERVAL = 15 * 60 * 1000;
-//    private static final long TIME_INTERVAL = 15 * 1000;
+//    private static final long TIME_INTERVAL = 30 * 1000;
+//        private static final long TIME_INTERVAL_BACK = 60 * 1000;
+    private static final long TIME_INTERVAL_BACK = 30 * 1000;
     private Context context;
     public static AlarmManager am;
     public static PendingIntent pendingIntent;
@@ -91,13 +93,10 @@ public class AlarmManagerUtils {
 
     @SuppressLint("NewApi")
     public void getUpAlarmManagerWorkOnOthers() {
+//        System.out.println("getUpAlarmManagerWorkOnOthers");
+
         //高版本重复设置闹钟达到低版本中setRepeating相同效果
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {// 6.0及以上
-            try {
-                Util.writeFile(context, "log.txt", "getUpAlarmManagerWorkOnOthers.\n");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
 //            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
 //                    System.currentTimeMillis() + TIME_INTERVAL, pendingIntent);
             am.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP,
@@ -107,6 +106,20 @@ public class AlarmManagerUtils {
 //                    + TIME_INTERVAL, pendingIntent);
             am.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                     SystemClock.elapsedRealtime() + TIME_INTERVAL, pendingIntent);
+        }
+    }
+
+    @SuppressLint("NewApi")
+    public void getUpAlarmManagerWorkOnBack() {
+//        System.out.println("getUpAlarmManagerWorkOnBack");
+
+        //高版本重复设置闹钟达到低版本中setRepeating相同效果
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {// 6.0及以上
+            am.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                    SystemClock.elapsedRealtime() + TIME_INTERVAL_BACK, pendingIntent);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {// 4.4及以上
+            am.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                    SystemClock.elapsedRealtime() + TIME_INTERVAL_BACK, pendingIntent);
         }
     }
 }

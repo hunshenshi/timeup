@@ -88,11 +88,11 @@ public class ActivityLifeCycle implements Application.ActivityLifecycleCallbacks
         if (foregroundActivityCount == 0) {
             isForegroundNow = false;
             Log.i("ActivityLifeCycle ","switch to background");
-            if (mainActivity.isMustfore()) {
-                Log.i("ActivityLifeCycle ","It is timing now, switch to foreground");
-                CheckService checkService = new CheckService();
-                checkService.toRunningForeground(activity, "com.szw.timeup");
-            }
+//            if (mainActivity.isMustfore()) {
+//                Log.i("ActivityLifeCycle ","It is timing now, switch to foreground");
+//                CheckService checkService = new CheckService();
+//                checkService.toRunningForeground(activity, "com.szw.timeup");
+//            }
         }
     }
 

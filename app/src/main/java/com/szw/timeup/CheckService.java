@@ -53,66 +53,128 @@ public class CheckService extends Service {
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        new Thread(new Runnable() {
-            @SuppressLint("LongLogTag")
-            @Override
-            public void run() {
-//                SimpleDateFormat sdf = new SimpleDateFormat();// 格式化时间
-//                sdf.applyPattern("yyyy-MM-dd HH:mm:ss a");// a为am/pm的标记
-//                Date date = new Date();// 获取当前时间
-//                System.out.println("现在时间：" + sdf.format(date));
-//                Log.d(TAG, sdf.format(date) + " run: ");
-                String currentPkg = AppUtil.getForegroundActivityName(getApplicationContext());
-//                String currentPkg2 = AppUtilV2.getForegroundActivityName(getApplicationContext());
-//                String currentPkg3 = AppUtilV3.getForegroundActivityName(getApplicationContext());
-//                System.out.println("AppUtil usageStats " + currentPkg);
-//                System.out.println("AppUtil2 usageStats " + currentPkg2);
-//                System.out.println("AppUtil3 usageStats " + currentPkg3);
+//        new Thread(new Runnable() {
+//            @SuppressLint("LongLogTag")
+//            @Override
+//            public void run() {
+////                SimpleDateFormat sdf = new SimpleDateFormat();// 格式化时间
+////                sdf.applyPattern("yyyy-MM-dd HH:mm:ss a");// a为am/pm的标记
+////                Date date = new Date();// 获取当前时间
+////                System.out.println("现在时间：" + sdf.format(date));
+////                Log.d(TAG, sdf.format(date) + " run: ");
+//                String currentPkg = AppUtil.getForegroundActivityName(getApplicationContext());
+////                String currentPkg2 = AppUtilV2.getForegroundActivityName(getApplicationContext());
+////                String currentPkg3 = AppUtilV3.getForegroundActivityName(getApplicationContext());
+////                System.out.println("AppUtil usageStats " + currentPkg);
+////                System.out.println("AppUtil2 usageStats " + currentPkg2);
+////                System.out.println("AppUtil3 usageStats " + currentPkg3);
+//                try {
+//                    Util.writeFile(getApplicationContext(), "log.txt", "AppUtil usageStats " + currentPkg + "\n");
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+////                System.out.println("AppUtilV2 usageEvent " + currentPkg2);
+//
+//                // 后台app自动切换到前台
+//                if (currentPkg.equalsIgnoreCase(TARGET_AIQIYI_PKG_NAME) ||
+//                        currentPkg.equalsIgnoreCase(TARGET_YOUKU_PKG_NAME) ||
+//                        currentPkg.equalsIgnoreCase(TARGET_BAIDUCLOUD_PKG_NAME) ||
+//                        currentPkg.equalsIgnoreCase(TARGET_QQLIVE_PKG_NAME) ||
+//                        currentPkg.equalsIgnoreCase(TARGET_TEST_PKG_NAME)) {
+//                    if (activity.isMustfore()) {
+//                        Log.i("CheckService onStartCommand ", "monitor app is background, need move foreground.");
+//                        try {
+//                            Util.writeFile(getApplicationContext(), "log.txt", "monitor app is background, need move foreground.\n");
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                        toRunningForeground(PKG_NAME);
+//                    } else if (videoAppRunning) {
+//                        videoAppRunning = false;
+//                        activity.setTiming(true);
+//                        activity.setMustfore(true);
+//                        Log.i("CheckService onStartCommand ", "monitor app is foreground.");
+//                        try {
+//                            Util.writeFile(getApplicationContext(), "log.txt", "monitor app is foreground.\n");
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+////                        toRunningForeground(getApplicationContext());
+//                        toRunningForeground(PKG_NAME);
+////                        toRunningForeground(getApplicationContext());
+//                    } else {
+//                        Log.i("CheckService onStartCommand ", "video app is foreground.");
+//                        try {
+//                            Util.writeFile(getApplicationContext(), "log.txt", "video app is foreground.\n");
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                        videoAppRunning = true;
+//                    }
+//                }
+//            }
+//        }).start();
+
+        String currentPkg = AppUtil.getForegroundActivityName(getApplicationContext());
+        try {
+            Util.writeFile(getApplicationContext(), "log.txt", "AppUtil usageStats " + currentPkg + "\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // 后台app自动切换到前台
+        if (currentPkg.equalsIgnoreCase(TARGET_AIQIYI_PKG_NAME) ||
+                currentPkg.equalsIgnoreCase(TARGET_YOUKU_PKG_NAME) ||
+                currentPkg.equalsIgnoreCase(TARGET_BAIDUCLOUD_PKG_NAME) ||
+                currentPkg.equalsIgnoreCase(TARGET_QQLIVE_PKG_NAME) ||
+                currentPkg.equalsIgnoreCase(TARGET_TEST_PKG_NAME)) {
+            if (activity.isMustfore()) {
+                Log.i(TAG, "monitor app is background, need move foreground.");
                 try {
-                    Util.writeFile(getApplicationContext(), "log.txt", "AppUtil usageStats " + currentPkg + "\n");
+                    Util.writeFile(getApplicationContext(), "log.txt", "monitor app is background, need move foreground.\n");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-//                System.out.println("AppUtilV2 usageEvent " + currentPkg2);
-
-                // 当前app可打开另一个app
-//                toRunningForeground(TARGET_TEST_PKG_NAME);
-                // 后台app自动切换到前台
-                // TODO 全屏悬浮窗
-                if (currentPkg.equalsIgnoreCase(TARGET_AIQIYI_PKG_NAME) ||
-                        currentPkg.equalsIgnoreCase(TARGET_YOUKU_PKG_NAME) ||
-                        currentPkg.equalsIgnoreCase(TARGET_BAIDUCLOUD_PKG_NAME) ||
-                        currentPkg.equalsIgnoreCase(TARGET_QQLIVE_PKG_NAME) ||
-                        currentPkg.equalsIgnoreCase(TARGET_TEST_PKG_NAME)) {
-                    if (videoAppRunning) {
-                        videoAppRunning = false;
-                        activity.setTiming(true);
-                        activity.setMustfore(true);
-                        Log.i("CheckService onStartCommand ", "monitor app is foreground.");
-                        try {
-                            Util.writeFile(getApplicationContext(), "log.txt", "monitor app is foreground.\n");
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-//                        toRunningForeground(getApplicationContext());
-                        toRunningForeground(PKG_NAME);
-//                        toRunningForeground(getApplicationContext());
-                    } else {
-                        Log.i("CheckService onStartCommand ", "video app is foreground.");
-                        try {
-                            Util.writeFile(getApplicationContext(), "log.txt", "video app is foreground.\n");
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        videoAppRunning = true;
-                    }
+                toRunningForeground(PKG_NAME);
+            } else if (videoAppRunning) {
+                videoAppRunning = false;
+                activity.setTiming(true);
+                activity.setMustfore(true);
+                Log.i(TAG, "monitor app is foreground.");
+                try {
+                    Util.writeFile(getApplicationContext(), "log.txt", "monitor app is foreground.\n");
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+                toRunningForeground(PKG_NAME);
+            } else {
+                Log.i(TAG, "video app is foreground.");
+                try {
+                    Util.writeFile(getApplicationContext(), "log.txt", "video app is foreground.\n");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                videoAppRunning = true;
             }
-        }).start();
-        // 再次调用am，达到重复调度的作用
-        // TODO check有无重复调用，分别check前台和后台
-        // 疑问，为什么usb调试模式下可以重复
-        AlarmManagerUtils.getInstance(getApplicationContext()).getUpAlarmManagerWorkOnOthers();
+        }
+
+        if (activity.isMustfore()) {
+            Log.i(TAG, "getUpAlarmManagerWorkOnBack.");
+            try {
+                Util.writeFile(getApplicationContext(), "log.txt", "getUpAlarmManagerWorkOnBack.\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            AlarmManagerUtils.getInstance(getApplicationContext()).getUpAlarmManagerWorkOnBack();
+        } else {
+            Log.i(TAG, "getUpAlarmManagerWorkOnOthers.");
+            try {
+                Util.writeFile(getApplicationContext(), "log.txt", "getUpAlarmManagerWorkOnOthers.\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            AlarmManagerUtils.getInstance(getApplicationContext()).getUpAlarmManagerWorkOnOthers();
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 

@@ -41,7 +41,7 @@ public class FragmentTiming extends Fragment {
 
         Log.i("FragmentTiming ", "start timing");
         int timeStemp = 30 * 60 * 1000; // 30分钟
-//        int timeStemp = 10 * 1000; // 30秒
+//        int timeStemp = 2*60 * 1000; // 30秒
         CountDownTimer timer = new CountDownTimer(timeStemp, 1000) {
             @Override
             public void onTick(long l) {

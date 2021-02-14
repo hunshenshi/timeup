@@ -133,12 +133,15 @@ public class AppUtil {
 //                }
 
                 // 是否需要把com.huawei.android.launcher去掉
-                if (usageStatsResult == null || usageStatsResult.getLastTimeUsed() < usageStats.getLastTimeUsed()) {
+                if (!usageStats.getPackageName().contains("launcher")) {
+                    if (usageStatsResult == null || usageStatsResult.getLastTimeUsed() < usageStats.getLastTimeUsed()) {
+//                        || (usageStatsResult.getLastTimeUsed() < usageStats.getLastTimeUsed() && !usageStats.getPackageName().contains("launcher"))) {
 //                    System.out.println(usageStats.getPackageName() + " " + usageStats.getLastTimeUsed()
 //                            + " " + lastEvent + "===========");
 //                    stringBuilder.append(usageStats.getPackageName() + " " + usageStats.getLastTimeUsed()
 //                            + " " + lastEvent + "===========").append("\n");
-                    usageStatsResult = usageStats;
+                        usageStatsResult = usageStats;
+                    }
                 }
             }
 
