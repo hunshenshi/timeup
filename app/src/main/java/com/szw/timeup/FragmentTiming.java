@@ -54,6 +54,8 @@ public class FragmentTiming extends Fragment {
                 TextView textView = getActivity().findViewById(R.id.textview_second);
                 textView.setText(hour + "小时" + minute + "分钟" + second + "秒");
 
+                TimeUpApplication.getInstance().setTiming(true);
+
             }
 
             @Override
@@ -66,7 +68,8 @@ public class FragmentTiming extends Fragment {
 //                        .hide(getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_main2_fragment))
 //                        .show(getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment))
 //                        .commitAllowingStateLoss(); // 空白页面
-                ((MainActivity)getActivity()).setMustfore(false);
+//                ((MainActivity)getActivity()).setMustfore(false);
+                TimeUpApplication.getInstance().setTiming(false);
                 Log.i("time ", " finish");
 //                FragmentMonitor fragmentMonitor = new FragmentMonitor();
 //                getActivity().getSupportFragmentManager().beginTransaction()

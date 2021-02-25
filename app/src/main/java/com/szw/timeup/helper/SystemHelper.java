@@ -9,10 +9,14 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
 public class SystemHelper {
+
+    private static final String TAG = "SystemHelper";
 
     // 判断是否在电池白名单中
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -62,9 +66,53 @@ public class SystemHelper {
         }
     }
 
+    // 申请悬浮权限
     public void requestOverlayPermission(Context context) {
         Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
 //        intent.setData(Uri.parse("package:" + getPackageName()));
+        context.startActivity(intent);
+    }
+
+    //检测辅助功能是否开启
+    public boolean isAccessibilitySettingsOn(Context context, String serviceName) {
+        final String service = context.getPackageName() + "/" + serviceName;
+
+        try {
+            int accessibilityEnabled = Settings.Secure.getInt(context.getApplicationContext().getContentResolver(),
+                    android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
+            Log.v(TAG, "accessibilityEnabled = " + accessibilityEnabled);
+
+            TextUtils.SimpleStringSplitter mStringColonSplitter = new TextUtils.SimpleStringSplitter(':');
+
+            if (accessibilityEnabled == 1) {
+                Log.v(TAG, "***ACCESSIBILITY IS ENABLED*** -----------------");
+                String settingValue = Settings.Secure.getString(context.getApplicationContext().getContentResolver(),
+                        Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
+                if (settingValue != null) {
+                    mStringColonSplitter.setString(settingValue);
+                    while (mStringColonSplitter.hasNext()) {
+                        String accessibilityService = mStringColonSplitter.next();
+
+                        Log.v(TAG, "-------------- > accessibilityService :: " + accessibilityService + " " + service);
+                        if (accessibilityService.equalsIgnoreCase(service)) {
+                            Log.v(TAG, "We've found the correct setting - accessibility is switched on!");
+                            return true;
+                        }
+                    }
+                }
+            } else {
+                Log.v(TAG, "***ACCESSIBILITY IS DISABLED***");
+            }
+
+        } catch (Settings.SettingNotFoundException e) {
+            Log.e(TAG, "Error finding setting, default accessibility to not found: " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public void requestAccessibility(Context context) {
+        Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
         context.startActivity(intent);
     }
 }

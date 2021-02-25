@@ -17,7 +17,7 @@ public class AlarmManagerUtils {
 
     // 闹钟执行任务的时间间隔
     private static final long TIME_INTERVAL = 15 * 60 * 1000;
-//    private static final long TIME_INTERVAL = 30 * 1000;
+//    private static final long TIME_INTERVAL = 15 * 1000;
 //        private static final long TIME_INTERVAL_BACK = 60 * 1000;
     private static final long TIME_INTERVAL_BACK = 30 * 1000;
     private Context context;

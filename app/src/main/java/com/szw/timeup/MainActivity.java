@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
@@ -14,7 +13,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.szw.timeup.helper.SystemHelper;
 
@@ -24,25 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     private CheckService checkService;
     private ConnectionService connectionService;
-    private boolean isTiming = false;
-    // 必须在前台
-    private boolean mustfore = false;
 
-    public boolean isMustfore() {
-        return mustfore;
-    }
-
-    public void setMustfore(boolean mustfore) {
-        this.mustfore = mustfore;
-    }
-
-    public boolean isTiming() {
-        return isTiming;
-    }
-
-    public void setTiming(boolean timing) {
-        isTiming = timing;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +41,15 @@ public class MainActivity extends AppCompatActivity {
             systemHelper.requestPermissionForUsageStats(MainActivity.this);
         }
 
+        // 判断是否有悬浮窗口权限
         if (!Settings.canDrawOverlays(this)) {
             //若未授权则请求权限
             systemHelper.requestOverlayPermission(MainActivity.this);
+        }
+
+        // 判断是否有权限
+        if (!systemHelper.isAccessibilitySettingsOn(this, MonitorService.class.getCanonicalName())) {
+            systemHelper.requestAccessibility(MainActivity.this);
         }
 
         connectionService = new ConnectionService();
@@ -111,33 +97,34 @@ public class MainActivity extends AppCompatActivity {
 //        return super.onKeyUp(keyCode, event);
 //    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+    // 可以在菜单中增加选项，设置所要监控的App
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     class ConnectionService implements ServiceConnection {
         @SuppressLint("LongLogTag")
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            checkService = ((CheckService.CheckBuild)service).getMyService(); //获取Myservice对象
+            checkService = ((CheckService.CheckBuild)service).getCheckService();
 
             Log.i("##### MainActivity #####", "set setMainActivity");
             /**

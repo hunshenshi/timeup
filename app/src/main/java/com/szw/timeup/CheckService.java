@@ -28,12 +28,6 @@ import java.util.List;
 
 public class CheckService extends Service {
     private static final String TAG = "CheckService";
-    private static final String PKG_NAME = "com.szw.timeup";
-    private static final String TARGET_AIQIYI_PKG_NAME = "com.qiyi.video";
-    private static final String TARGET_YOUKU_PKG_NAME = "com.youku.phone";
-    private static final String TARGET_QQLIVE_PKG_NAME = "com.tencent.qqlive";
-    private static final String TARGET_BAIDUCLOUD_PKG_NAME = "com.baidu.netdisk";
-    private static final String TARGET_TEST_PKG_NAME = "com.google.android.apps.maps";
 
     private boolean videoAppRunning = false;
 
@@ -123,30 +117,18 @@ public class CheckService extends Service {
         }
 
         // 后台app自动切换到前台
-        if (currentPkg.equalsIgnoreCase(TARGET_AIQIYI_PKG_NAME) ||
-                currentPkg.equalsIgnoreCase(TARGET_YOUKU_PKG_NAME) ||
-                currentPkg.equalsIgnoreCase(TARGET_BAIDUCLOUD_PKG_NAME) ||
-                currentPkg.equalsIgnoreCase(TARGET_QQLIVE_PKG_NAME) ||
-                currentPkg.equalsIgnoreCase(TARGET_TEST_PKG_NAME)) {
-            if (activity.isMustfore()) {
-                Log.i(TAG, "monitor app is background, need move foreground.");
-                try {
-                    Util.writeFile(getApplicationContext(), "log.txt", "monitor app is background, need move foreground.\n");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                toRunningForeground(PKG_NAME);
-            } else if (videoAppRunning) {
+        if (TimeUpApplication.isVideoApp(currentPkg)) {
+            if (videoAppRunning) {
                 videoAppRunning = false;
-                activity.setTiming(true);
-                activity.setMustfore(true);
+                TimeUpApplication.getInstance().setChangeFrag(true);
+//                activity.setMustfore(true);
                 Log.i(TAG, "monitor app is foreground.");
                 try {
                     Util.writeFile(getApplicationContext(), "log.txt", "monitor app is foreground.\n");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                toRunningForeground(PKG_NAME);
+                TimeUpApplication.getInstance().toRunningForeground(TimeUpApplication.PKG_NAME);
             } else {
                 Log.i(TAG, "video app is foreground.");
                 try {
@@ -158,23 +140,14 @@ public class CheckService extends Service {
             }
         }
 
-        if (activity.isMustfore()) {
-            Log.i(TAG, "getUpAlarmManagerWorkOnBack.");
-            try {
-                Util.writeFile(getApplicationContext(), "log.txt", "getUpAlarmManagerWorkOnBack.\n");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            AlarmManagerUtils.getInstance(getApplicationContext()).getUpAlarmManagerWorkOnBack();
-        } else {
-            Log.i(TAG, "getUpAlarmManagerWorkOnOthers.");
-            try {
-                Util.writeFile(getApplicationContext(), "log.txt", "getUpAlarmManagerWorkOnOthers.\n");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            AlarmManagerUtils.getInstance(getApplicationContext()).getUpAlarmManagerWorkOnOthers();
+
+        Log.i(TAG, "getUpAlarmManagerWorkOnOthers.");
+        try {
+            Util.writeFile(getApplicationContext(), "log.txt", "getUpAlarmManagerWorkOnOthers.\n");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        AlarmManagerUtils.getInstance(getApplicationContext()).getUpAlarmManagerWorkOnOthers();
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -196,7 +169,6 @@ public class CheckService extends Service {
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 //        intent.putExtra("fragment", 2);
         activity.startActivity(intent);
-
     }
 
     public void toRunningForeground(Activity activity, String packageNameTarget) {
@@ -217,7 +189,6 @@ public class CheckService extends Service {
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 //        intent.putExtra("fragment", 2);
         activity.startActivity(intent);
-
     }
 
     public void toRunningForeground(Context context) {
@@ -248,7 +219,7 @@ public class CheckService extends Service {
     }
 
     class CheckBuild extends Binder {
-        public CheckService getMyService()
+        public CheckService getCheckService()
         {
             return CheckService.this;
         }

@@ -55,10 +55,14 @@ public class ActivityLifeCycle implements Application.ActivityLifecycleCallbacks
         if (willSwitchToForeground && isInteractive(activity)) {
             // 应用从后台跳转到前台，而非第一次启动，并且需要计时才进行fragment切换
             mainActivity = (MainActivity)activity;
-            if (!isForegroundNow && mainActivity.isTiming()) {
+            if (!isForegroundNow && TimeUpApplication.getInstance().isChangeFrag()) {
                 Log.i("#### ActivityLifeCycle ####","switch to foreground action ");
-                mainActivity.changeFragment();
-                mainActivity.setTiming(false);
+                // 是否正在计时，如果正在计时，则不change
+                if (!TimeUpApplication.getInstance().isTiming()) {
+                    Log.i("t", "is timing");
+                    mainActivity.changeFragment();
+                }
+                TimeUpApplication.getInstance().setChangeFrag(false);
             }
             isForegroundNow = true;
             Log.i("#### ActivityLifeCycle ####","switch to foreground" );
