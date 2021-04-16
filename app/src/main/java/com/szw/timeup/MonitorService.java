@@ -40,7 +40,7 @@ public class MonitorService extends AccessibilityService {
 
             // 正在倒计时，则阻止响应app运行，并播放音频
             if (TimeUpApplication.getInstance().isTiming() && TimeUpApplication.isVideoApp(packageName)) {
-                mSoundPool.play(soundID.get(2), 1, 1, 0, 2, 1);
+                mSoundPool.play(soundID.get(2), 30, 30, 0, 2, 1);
                 Log.i(TAG, "packageName:" + packageName + " , is running, should be change.");
                 TimeUpApplication.getInstance().toRunningForeground(TimeUpApplication.PKG_NAME);
             }

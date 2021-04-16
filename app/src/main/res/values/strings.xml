@@ -5,7 +5,7 @@
     <string name="fragment_monitor_label">First Fragment</string>
     <string name="fragment_timing_label">Second Fragment</string>
     <string name="textview_monitor">未监控应用使用时长</string>
-    <string name="start">start monitor</string>
+    <string name="start">refresh monitor time</string>
     <string name="accessibility_service_description">允许该程序监听你的操作！</string>>
 
 </resources>

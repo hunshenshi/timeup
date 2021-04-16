@@ -140,6 +140,7 @@ public class CheckService extends Service {
             }
         }
 
+        TimeUpApplication.getInstance().setMonitorTime();
 
         Log.i(TAG, "getUpAlarmManagerWorkOnOthers.");
         try {

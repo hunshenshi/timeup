@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class TimeUpApplication extends Application {
 
     public static final String PKG_NAME = "com.szw.timeup";
@@ -16,6 +19,7 @@ public class TimeUpApplication extends Application {
 
     private boolean isTiming = false;
     private boolean changeFrag = false;
+    private String monitorTime = "default";
 
     private static TimeUpApplication timeUpApplication = null;
     public static TimeUpApplication getInstance(){
@@ -36,6 +40,17 @@ public class TimeUpApplication extends Application {
 
     public void setTiming(boolean timing) {
         isTiming = timing;
+    }
+
+    public String getMonitorTime() {
+        return monitorTime;
+    }
+
+    public void setMonitorTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat();// 格式化时间
+        sdf.applyPattern("yyyy-MM-dd HH:mm:ss a");// a为am/pm的标记
+        Date date = new Date();// 获取当前时间
+        this.monitorTime = sdf.format(date);
     }
 
     @Override
